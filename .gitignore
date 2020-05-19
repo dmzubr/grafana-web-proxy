@@ -1,0 +1,11 @@
+.vs/*
+to-do-notes.txt
+WebApi/bin/*
+WebApi/obj/*
+WebApi/Deployment/*
+WebApi/appsettings.json
+WebApi/appsettings.development.json
+WebApi.Tests/bin/*
+WebApi.Tests/obj/*
+*/*.pfx
+*/*.bat
