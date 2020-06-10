@@ -15,15 +15,16 @@ namespace GrafanaProxy.WebApi.Controllers
     public class ProxyController : Controller
     {
         private readonly string _grafanaBaseUrl;
-        private readonly string _grafanaApiKey;
         private readonly bool _injectCustomCss;
+        
+        private readonly GrafanaProxyConfiguration _config;
 
         public ProxyController(IOptions<GrafanaProxyConfiguration> optionsAccessor, IConfigEnvironmentProvider configEnvProvider) 
         {            
             var configFromEnv = configEnvProvider.GetConfig();
+            this._config = configFromEnv;
 
             this._grafanaBaseUrl = !string.IsNullOrEmpty(configFromEnv.BaseUrl) ? configFromEnv.BaseUrl : optionsAccessor.Value.BaseUrl;
-            this._grafanaApiKey = !string.IsNullOrEmpty(configFromEnv.ApiKey) ? configFromEnv.ApiKey : optionsAccessor.Value.ApiKey;
             
             this._injectCustomCss = configFromEnv.InjectCustomCss.HasValue ? 
                 configFromEnv.InjectCustomCss.Value : 
@@ -42,7 +43,7 @@ namespace GrafanaProxy.WebApi.Controllers
             var queryString = this.Request.QueryString.Value;
             var grafanaTargetUrl = $"{_grafanaBaseUrl}/d/{rest}{queryString}";
             var httpResp = await grafanaTargetUrl
-                .WithHeader("Authorization", $"Bearer {_grafanaApiKey}")
+                .WithHeader("Authorization", AuthHelper.GetAuthHeaderValue(this.Request, this._config))
                 .GetAsync();            
             var responseContent = await httpResp.Content.ReadAsStringAsync();
             var res = new ContentResult
@@ -65,7 +66,8 @@ namespace GrafanaProxy.WebApi.Controllers
             var queryString = this.Request.QueryString.Value;
             var grafanaTargetUrl = $"{_grafanaBaseUrl}/api/{rest}{queryString}";
             System.Net.Http.HttpResponseMessage httpResp = null;
-            var httpReq = grafanaTargetUrl.WithHeader("Authorization", $"Bearer {_grafanaApiKey}");
+            var httpReq = grafanaTargetUrl
+                .WithHeader("Authorization", AuthHelper.GetAuthHeaderValue(this.Request, this._config));
             switch (Request.Method.ToUpper())
             {
                 case "GET":

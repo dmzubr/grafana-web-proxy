@@ -20,12 +20,13 @@ namespace GrafanaProxy.WebApi.Services
 
     public class ConfigEnvProvider : IConfigEnvironmentProvider
     {
-        public GrafanaProxyConfiguration GetConfig()        
+        public GrafanaProxyConfiguration GetConfig()
         {
             var res = new GrafanaProxyConfiguration
             {
                 BaseUrl = Environment.GetEnvironmentVariable("GRAFANA_BASE_URL"),
                 ApiKey = Environment.GetEnvironmentVariable("GRAFANA_API_KEY"),
+                UsersKeysStr = Environment.GetEnvironmentVariable("GRAFANA_USERS"),
                 InjectCustomCss = null
             };
 
