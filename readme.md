@@ -58,6 +58,6 @@ When use multiple usernames - need to append query paramater on the client's sid
 Paramater is *"proxy_userId="* (use prefix "proxy_" to avoid overlap with target params of dashboard that will ber passed to target Grafana service).
 Paramater can be used at any position in query string.
 So, example of request from the client will look like:
-*http://localhost:80/d/7C9DzT6Wz/some-dashboard?orgId=1&var-CompanyId=12&var-ControlProcedureId=21&**proxy_userId=user1***
+*http://localhost:80/d/7C9DzT6Wz/some-dashboard?orgId=1&var-CompanyId=12&var-ControlProcedureId=21&proxy_userId=user1*
 
 # Using on client's side
