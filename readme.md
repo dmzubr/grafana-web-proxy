@@ -40,5 +40,24 @@ At the moment available options are:
 - GRAFANA_BASE_URL - URL for root of target (proxied) Grafana service;
 - GRAFANA_API_KEY - API Key to perform authorized requests to target Grafana service
 - GRAFANA_INJECT_CUSTOM_CSS - Flag to use injection of CSS to hide Grafana's view header, paramaters block and sidebar. Suppose that in the environment of your web app you should restrict user to perform any actions with Grafana except of watching dashboards :)
+- GRAFANA_USERS - String to use multiple API keys. Described in details below.
+
+# Manage API keys
+Proxy supports using of multiple API keys on the side of target Grafana service instance.
+Keys are associated with usernames (aka user accounts).
+To define this association need to provide the following environment variable to container:
+--env GRAFANA_USERS="user1:<Key1>,user2:<Key2>,..."
+If you want to use single key you can use the option above but only with one user.
+--env GRAFANA_USERS="user1:<Key1>"
+OR pass the key with environment variable:
+--env GRAFANA_API_KEY=configured_api_key_here
+
+Value from variable GRAFANA_USERS has priority over GRAFANA_API_KEY.
+
+When use multiple usernames - need to append query paramater on the client's side.
+Paramater is *"proxy_userId="* (use prefix "proxy_" to avoid overlap with target params of dashboard that will ber passed to target Grafana service).
+Paramater can be used at any position in query string.
+So, example of request from the client will look like:
+*http://localhost:80/d/7C9DzT6Wz/some-dashboard?orgId=1&var-CompanyId=12&var-ControlProcedureId=21&**proxy_userId=user1***
 
 # Using on client's side
