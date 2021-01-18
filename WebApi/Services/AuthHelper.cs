@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 using GrafanaProxy.WebApi.Configuration;
 using Microsoft.AspNetCore.Http;
@@ -34,7 +33,7 @@ namespace GrafanaProxy.WebApi.Services
             else
             {
                 // No user found in query string - try to value for the first user
-                if (config.UsersKeys.Keys.Count > 0)
+                if (config.UsersKeys != null && config.UsersKeys.Keys.Count > 0)
                     res = config.UsersKeys.FirstOrDefault().Value;
                 else
                     // No user keys is defined. So - try to get key value from config's ApiKey field
